@@ -149,10 +149,10 @@ internal sealed class ReadOnlyBindableReactiveProperty<T>(BindableReactiveProper
         return ((IReadOnlyBindableReactiveProperty<T>)property).EnableValidation(validator);
     }
 
-    public IReadOnlyBindableReactiveProperty<T> EnableValidation<TClass>([CallerMemberName] string? propertyName = null)
-    {
-        return ((IReadOnlyBindableReactiveProperty<T>)property).EnableValidation<TClass>(propertyName);
-    }
+    //public IReadOnlyBindableReactiveProperty<T> EnableValidation<TClass>([CallerMemberName] string? propertyName = null)
+    //{
+    //    return ((IReadOnlyBindableReactiveProperty<T>)property).EnableValidation<TClass>(propertyName);
+    //}
 
     public IReadOnlyBindableReactiveProperty<T> EnableValidation(Expression<Func<IReadOnlyBindableReactiveProperty<T>?>> selfSelector)
     {

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -20,7 +21,7 @@ public interface IReadOnlyBindableReactiveProperty<T> : IReadOnlyBindableReactiv
     new T Value { get; }
     IReadOnlyBindableReactiveProperty<T> EnableValidation();
     IReadOnlyBindableReactiveProperty<T> EnableValidation(Func<T, Exception?> validator);
-    IReadOnlyBindableReactiveProperty<T> EnableValidation<TClass>([CallerMemberName] string? propertyName = null!);
+    //IReadOnlyBindableReactiveProperty<T> EnableValidation<TClass>([CallerMemberName] string? propertyName = null!);
     IReadOnlyBindableReactiveProperty<T> EnableValidation(Expression<Func<IReadOnlyBindableReactiveProperty<T>?>> selfSelector);
     Observable<T> AsObservable();
     IReadOnlyBindableReactiveProperty<T> ForceValidate();
@@ -38,7 +39,7 @@ public interface IBindableReactiveProperty<T> : IBindableReactiveProperty, IRead
     void OnNext(T value);
     new IBindableReactiveProperty<T> EnableValidation();
     new IBindableReactiveProperty<T> EnableValidation(Func<T, Exception?> validator);
-    new IBindableReactiveProperty<T> EnableValidation<TClass>([CallerMemberName] string? propertyName = null!);
+    //new IBindableReactiveProperty<T> EnableValidation<TClass>([CallerMemberName] string? propertyName = null!);
     IBindableReactiveProperty<T> EnableValidation(Expression<Func<IBindableReactiveProperty<T>?>> selfSelector);
     new IBindableReactiveProperty<T> ForceValidate();
 }
@@ -236,14 +237,14 @@ public class BindableReactiveProperty<T> : ReactiveProperty<T>, IBindableReactiv
         return this;
     }
 
-    public BindableReactiveProperty<T> EnableValidation<TClass>([CallerMemberName] string? propertyName = null!)
-    {
-        var propertyInfo = typeof(TClass).GetProperty(propertyName!, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-        SetValidationContext(propertyInfo!);
+    //public BindableReactiveProperty<T> EnableValidation<TClass>([CallerMemberName] string? propertyName = null!)
+    //{
+    //    var propertyInfo = typeof(TClass).GetProperty(propertyName!, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+    //    SetValidationContext(propertyInfo!);
 
-        IsValidationEnabled = true;
-        return this;
-    }
+    //    IsValidationEnabled = true;
+    //    return this;
+    //}
 
     public BindableReactiveProperty<T> EnableValidation(Expression<Func<BindableReactiveProperty<T>?>> selfSelector)
     {
@@ -262,9 +263,9 @@ public class BindableReactiveProperty<T> : ReactiveProperty<T>, IBindableReactiv
 
         if (attrs.Length != 0)
         {
-            var context = new ValidationContext(this)
+            var displayName = display?.GetName() ?? propertyInfo.Name;
+            var context = new ValidationContext(this, displayName, serviceProvider: null, items: null)
             {
-                DisplayName = display?.GetName() ?? propertyInfo.Name,
                 MemberName = nameof(Value),
             };
 
@@ -298,7 +299,7 @@ public class BindableReactiveProperty<T> : ReactiveProperty<T>, IBindableReactiv
 
     IBindableReactiveProperty<T> IBindableReactiveProperty<T>.EnableValidation(Func<T, Exception?> validator) => EnableValidation(validator);
 
-    IBindableReactiveProperty<T> IBindableReactiveProperty<T>.EnableValidation<TClass>(string? propertyName) => EnableValidation<TClass>(propertyName);
+    //IBindableReactiveProperty<T> IBindableReactiveProperty<T>.EnableValidation<TClass>(string? propertyName) => EnableValidation<TClass>(propertyName);
 
     IBindableReactiveProperty<T> IBindableReactiveProperty<T>.EnableValidation(Expression<Func<IBindableReactiveProperty<T>?>> selfSelector)
     {
@@ -321,7 +322,7 @@ public class BindableReactiveProperty<T> : ReactiveProperty<T>, IBindableReactiv
 
     IReadOnlyBindableReactiveProperty<T> IReadOnlyBindableReactiveProperty<T>.EnableValidation(Func<T, Exception?> validator) => EnableValidation(validator);
 
-    IReadOnlyBindableReactiveProperty<T> IReadOnlyBindableReactiveProperty<T>.EnableValidation<TClass>(string? propertyName) => EnableValidation<TClass>(propertyName);
+    //IReadOnlyBindableReactiveProperty<T> IReadOnlyBindableReactiveProperty<T>.EnableValidation<TClass>(string? propertyName) => EnableValidation<TClass>(propertyName);
 
     IReadOnlyBindableReactiveProperty<T> IReadOnlyBindableReactiveProperty<T>.EnableValidation(Expression<Func<IReadOnlyBindableReactiveProperty<T>?>> selfSelector)
     {
