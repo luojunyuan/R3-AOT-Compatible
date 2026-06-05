@@ -45,7 +45,7 @@ public interface IBindableReactiveProperty<T> : IBindableReactiveProperty, IRead
 
 // all operators need to call from UI Thread(not thread-safe)
 
-#if NET6_0_OR_GREATER
+#if NET6_0_OR_GREATER && !R3_DISABLE_SYSTEM_TEXT_JSON_CONVERTERS
 [System.Text.Json.Serialization.JsonConverter(typeof(BindableReactivePropertyJsonConverterFactory))]
 #endif
 public class BindableReactiveProperty<T> : ReactiveProperty<T>, IBindableReactiveProperty<T>

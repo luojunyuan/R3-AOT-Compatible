@@ -17,7 +17,7 @@ public abstract class ReadOnlyReactiveProperty<T> : Observable<T>, IDisposable
 
 // allow inherit
 
-#if NET6_0_OR_GREATER
+#if NET6_0_OR_GREATER  && !R3_DISABLE_SYSTEM_TEXT_JSON_CONVERTERS
 [JsonConverter(typeof(ReactivePropertyJsonConverterFactory))]
 #endif
 public class ReactiveProperty<T> : ReadOnlyReactiveProperty<T>, ISubject<T>
@@ -427,7 +427,7 @@ public class ReactiveProperty<T> : ReadOnlyReactiveProperty<T>, ISubject<T>
     }
 }
 
-#if NET6_0_OR_GREATER
+#if NET6_0_OR_GREATER && !R3_DISABLE_SYSTEM_TEXT_JSON_CONVERTERS
 
 public class ReactivePropertyJsonConverterFactory : JsonConverterFactory
 {
